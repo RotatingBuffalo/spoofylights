@@ -17,6 +17,9 @@ fn main() {
         // interrupt handler, so the matrix doesn't have
         // residual garbage left over on it.
         ctrlc::set_handler(|| {
+            let mut board = Hardware::new();
+            board.connect();
+            board.close();
             process::abort();
         })
         .expect("Error setting interrupt handler?");
