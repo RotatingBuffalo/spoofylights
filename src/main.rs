@@ -9,9 +9,19 @@ use std::{
     thread,
     time::Duration,
 };
+
 fn main() {
     #[cfg(target_arch = "arm")]
     {
+        // interrupt handler, so the matrix doesn't have
+        // residual garbage left over on it.
+        ctrlc::set_handler(|| {
+            let mut board = Hardware::new();
+            board.connect();
+            board.close();
+        })
+        .expect("Error setting interrupt handler?");
+
         // cava stuff.
         let mut cava = Command::new("cava")
             .arg("-p")
@@ -36,7 +46,6 @@ fn main() {
             for mut v in &mut bar_vals {
                 *v = *v / 2048;
             }
-            println!("{:?}", bar_vals);
             for i in 0..32 {
                 for j in 0..(32 - bar_vals[i / 2]) {
                     f.this[(j as usize, i as usize)] = Pixel::new(Some((0, 0, 0)));
