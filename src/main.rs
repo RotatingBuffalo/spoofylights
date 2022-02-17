@@ -15,12 +15,6 @@ fn main() {
     {
         // interrupt handler, so the matrix doesn't have
         // residual garbage left over on it.
-        ctrlc::set_handler(|| {
-            let mut board = Hardware::new();
-            board.connect();
-            board.close();
-        })
-        .expect("Error setting interrupt handler?");
 
         // cava stuff.
         let mut cava = Command::new("cava")
@@ -36,6 +30,10 @@ fn main() {
         let mut f = Frame::new(Algos::hue_wave);
         let mut target = Hardware::new();
         target.connect();
+        ctrlc::set_handler(move || {
+            target.close();
+        })
+        .expect("Error setting interrupt handler?");
         // program loop
         let mut life: i32 = 0;
         loop {
