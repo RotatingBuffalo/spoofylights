@@ -5,6 +5,7 @@ use spoofylightslib::raymond::hardware::Hardware;
 use spoofylightslib::raymond::javasimulator::JavaSimulator;
 use spoofylightslib::raymond::Raymond;
 use std::{
+    process,
     process::{Command, Stdio},
     thread,
     time::Duration,
@@ -16,7 +17,7 @@ fn main() {
         // interrupt handler, so the matrix doesn't have
         // residual garbage left over on it.
         ctrlc::set_handler(|| {
-            panic!();
+            process::abort();
         })
         .expect("Error setting interrupt handler?");
 
