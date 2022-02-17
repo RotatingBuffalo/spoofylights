@@ -20,7 +20,7 @@ fn main() {
             board.connect();
             let mut empty_frame: Frame = Frame::new(Algos::default);
             empty_frame.this = Array2D::filled_with(Pixel::new(Some((0, 0, 0))), 32, 32);
-            board.send_frame(empty_frame);
+            board.send_frame(&empty_frame);
             board.close();
             thread::sleep(Duration::new(0, 500000));
             process::abort();
