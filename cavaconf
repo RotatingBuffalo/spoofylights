@@ -1,0 +1,10 @@
+[general]
+bars = 16
+framerate = 25
+sensitivity = 3
+[output]
+method = raw
+raw_target = "/dev/stdout"
+bit_format = "16bit"
+[smoothing]
+integral = 77
