@@ -17,14 +17,7 @@ fn main() {
         // interrupt handler, so the matrix doesn't have
         // residual garbage left over on it.
         ctrlc::set_handler(|| {
-            let mut board = Hardware::new();
-            board.connect();
-            let mut empty_frame: Frame = Frame::new(Algos::default);
-            empty_frame.this = Array2D::filled_with(Pixel::new(Some((0, 0, 0))), 32, 32);
-            board.send_frame(&mut empty_frame);
-            board.close();
-            thread::sleep(Duration::new(0, 500000));
-            process::abort();
+            panic!();
         })
         .expect("Error setting interrupt handler?");
 
