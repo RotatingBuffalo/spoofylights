@@ -5,8 +5,7 @@ use spoofylightslib::raymond::hardware::Hardware;
 use spoofylightslib::raymond::javasimulator::JavaSimulator;
 use spoofylightslib::raymond::Raymond;
 use std::{
-    process,
-    process::{Command, Stdio},
+    process::{self, Command, Stdio},
     thread,
     time::Duration,
 };
@@ -19,7 +18,11 @@ fn main() {
         ctrlc::set_handler(|| {
             let mut board = Hardware::new();
             board.connect();
+            let mut empty_frame: Frame = Frame::new(Algos::default);
+            empty_frame.this = Array2D::filled_with(Pixel::new(Some((0, 0, 0))), 32, 32);
+            board.send_frame(empty_frame);
             board.close();
+            thread::sleep(Duration::new(0, 500000));
             process::abort();
         })
         .expect("Error setting interrupt handler?");
