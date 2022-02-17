@@ -1,3 +1,4 @@
+use array2d::Array2D;
 use byteorder::{ReadBytesExt, BE};
 use spoofylightslib::frame::{algos::Algos, pixel::Pixel, Frame, JavaFmt};
 #[cfg(target_arch = "arm")]
