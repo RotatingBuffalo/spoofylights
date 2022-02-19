@@ -1,12 +1,11 @@
-use array2d::Array2D;
 use byteorder::{ReadBytesExt, BE};
-use spoofylightslib::frame::{algos::Algos, pixel::Pixel, Frame, JavaFmt};
+use spoofylightslib::frame::{algos::Algos, pixel::Pixel, Frame};
 #[cfg(target_arch = "arm")]
 use spoofylightslib::raymond::hardware::Hardware;
 use spoofylightslib::raymond::javasimulator::JavaSimulator;
 use spoofylightslib::raymond::Raymond;
 use std::{
-    process::{self, Command, Stdio},
+    process::{Command, Stdio},
     thread,
     time::Duration,
 };
@@ -81,8 +80,8 @@ fn main() {
                 .read_u16_into::<BE>(&mut bar_vals)
                 .expect("something has gonw awry with byteorder.");
 
-            for mut v in &mut bar_vals {
-                *v = *v / 2048;
+            for i in 0..bar_vals.len() {
+                bar_vals[i] = bar_vals[i] / 2048;
             }
             println!("{:?}", bar_vals);
             for i in 0..32 {
