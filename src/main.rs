@@ -41,8 +41,8 @@ fn main() {
                 .read_u16_into::<BE>(&mut bar_vals)
                 .expect("something has gone awry with byteorder.");
 
-            for mut v in &mut bar_vals {
-                *v = *v / 2048;
+            for i in 0..bar_vals.len() {
+                bar_vals[i] = bar_vals[i] / 2048;
             }
             for i in 0..32 {
                 for j in 0..(32 - bar_vals[i / 2]) {
