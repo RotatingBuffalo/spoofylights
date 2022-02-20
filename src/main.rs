@@ -5,12 +5,37 @@ use spoofylightslib::raymond::hardware::Hardware;
 use spoofylightslib::raymond::javasimulator::JavaSimulator;
 use spoofylightslib::raymond::Raymond;
 use std::{
+    fs,
     process::{Command, Stdio},
     thread,
     time::Duration,
 };
-
+fn cava_setup(num_bars: u8, smoothing: u8, framerate: u8, sensitivity: u8) {
+    let config = format!(
+        "
+[general]
+bars = {}
+framerate = {}
+sensitivity = {}
+[output]
+method = raw
+raw_target = \"/dev/stdout\"
+bit_format = \"16bit\"
+[smoothing]
+integral = {}
+",
+        num_bars, framerate, sensitivity, smoothing,
+    );
+    fs::write("cavaconf", config).ok();
+}
 fn main() {
+    const NUM_BARS: u8 = 32;
+    const SMOOTHING: u8 = 77;
+    const FRAMERATE: u8 = 25;
+    const SENSITIVITY: u8 = 3;
+    {
+        cava_setup(NUM_BARS, SMOOTHING, FRAMERATE, SENSITIVITY)
+    }
     #[cfg(target_arch = "arm")]
     {
         // interrupt handler, so the matrix doesn't have
@@ -27,7 +52,7 @@ fn main() {
             .stdout(Stdio::piped())
             .spawn()
             .expect("Failed to run cava. Is it installed?");
-        let mut bar_vals: [u16; 16] = [0; 16];
+        let mut bar_vals: [u16; NUM_BARS as usize] = [0; NUM_BARS as usize];
         let mut stdout = cava.stdout.take().unwrap();
 
         // rgb matrix display stuff.
@@ -45,7 +70,7 @@ fn main() {
                 bar_vals[i] = bar_vals[i] / 2048;
             }
             for i in 0..32 {
-                for j in 0..(32 - bar_vals[i / 2]) {
+                for j in 0..(32 - bar_vals[i / (32 / NUM_BARS) as usize]) {
                     f.this[(j as usize, i as usize)] = Pixel::new(Some((0, 0, 0)));
                 }
             }
@@ -66,7 +91,7 @@ fn main() {
             .stdout(Stdio::piped())
             .spawn()
             .expect("Failed to run cava. Is it installed?");
-        let mut bar_vals: [u16; 16] = [0; 16];
+        let mut bar_vals: [u16; NUM_BARS as usize] = [0; NUM_BARS as usize];
         let mut stdout = cava.stdout.take().unwrap();
 
         // rgb matrix display stuff.
@@ -85,7 +110,7 @@ fn main() {
             }
             println!("{:?}", bar_vals);
             for i in 0..32 {
-                for j in 0..(32 - bar_vals[i / 2]) {
+                for j in 0..(32 - bar_vals[i / (32 / NUM_BARS) as usize]) {
                     f.this[(j as usize, i as usize)] = Pixel::new(Some((0, 0, 0)));
                 }
             }
