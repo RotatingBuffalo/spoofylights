@@ -31,7 +31,7 @@ integral = {}
 fn main() {
     const NUM_BARS: u8 = 32;
     const SMOOTHING: u8 = 77;
-    const FRAMERATE: u8 = 25;
+    const FRAMERATE: u8 = 15;
     const SENSITIVITY: u8 = 3;
     {
         cava_setup(NUM_BARS, SMOOTHING, FRAMERATE, SENSITIVITY)
